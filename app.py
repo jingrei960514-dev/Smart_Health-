@@ -26,6 +26,8 @@ from fitness_pipeline.recommenders.food_recommender import (
 from fitness_pipeline.recommenders.goal_engine import estimate_goal_days
 from fitness_pipeline.recommenders.llm_meal_plan import generate_llm_meal_plan
 from fitness_pipeline.recommenders.program_recommender import recommend_programs
+from fitness_pipeline.recommenders.program_recommender import load_program_candidates
+
 
 # ── 資料路徑（對應你目前的結構：data/ 在根目錄）───────────────────────────────
 _BASE        = os.path.join(os.path.dirname(__file__), "data")
@@ -130,7 +132,7 @@ if st.sidebar.button("產生個人化分析報告", type="primary"):
 
     # 三、營養推薦
     st.header("三、營養輔助推薦清單")
-    st.dataframe(food_display.round(3), use_container_width=True, hide_index=True)
+    st.dataframe(food_display.round(3), width=True, hide_index=True)
     st.caption("以上表格依據 Cosine Similarity 計算得出，相似度越高代表營養配比越接近您的目標。")
 
     # 四、課表推薦

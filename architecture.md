@@ -180,7 +180,7 @@ PipelineResult   ← 整個 pipeline 的最終輸出
 ---
 
 ## 測試方式
-
+git add ARCHITECTURE.md
 ```bash
 python -m pytest fitness_pipeline/tests/test_fixes.py -v
 ```

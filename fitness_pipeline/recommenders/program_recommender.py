@@ -31,7 +31,7 @@ from fitness_pipeline.utils.helpers import (
 # Paths — resolved relative to this file so they work from any cwd
 # ---------------------------------------------------------------------------
 
-_BASE                    = os.path.join(os.path.dirname(__file__), "..", "..", "handoff", "data")
+_BASE = os.path.join(os.path.dirname(__file__), "..", "..", "data")
 PROGRAM_SUMMARY_PATH     = os.path.join(_BASE, "program_summary.csv")
 PROGRAM_FITNESS_PATH     = os.path.join(_BASE, "fitness_and_workout_dataset.csv")
 PROGRAM_DETAIL_PATH      = os.path.join(_BASE, "programs_detailed_boostcamp_kaggle.csv")
