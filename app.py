@@ -132,7 +132,7 @@ if st.sidebar.button("產生個人化分析報告", type="primary"):
 
     # 三、營養推薦
     st.header("三、營養輔助推薦清單")
-    st.dataframe(food_display.round(3), width=True, hide_index=True)
+    st.dataframe(food_display.round(3), width='stretch', hide_index=True)
     st.caption("以上表格依據 Cosine Similarity 計算得出，相似度越高代表營養配比越接近您的目標。")
 
     # 四、課表推薦
