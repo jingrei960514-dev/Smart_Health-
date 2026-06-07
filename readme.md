@@ -79,10 +79,22 @@ pip install google-genai
 
 資料集因檔案過大未上傳至 GitHub，請從以下連結下載：
 
-👉 **[[點此下載 data 資料夾](https://drive.google.com/drive/folders/14rte5yBcbsJwVmXuCeR0EV-sdYZ0fzn1?usp=sharing)](你的 Google Drive 連結)**
+👉 👉 **[點此下載 data 資料夾](https://drive.google.com/drive/folders/14rte5yBcbsJwVmXuCeR0EV-sdYZ0fzn1?usp=sharing)**
 
-下載後將整個 `data/` 資料夾放到專案根目錄，結構如下：
+方式 A：下載到的是 data.zip（推薦）
+直接解壓縮，將 data/ 資料夾放到專案根目錄即可。
+SMART_HEALTH/
+└── data/
+    ├── cleaned_fitness_data_v2.csv
+    ├── cleaned_nutrients_analysis.csv
+    ├── fitness_and_workout_dataset.csv
+    ├── program_profiles_zh.csv
+    ├── program_profiles.csv
+    ├── program_summary.csv
+    └── programs_detailed_boostcamp_kaggle.csv
 
+方式 B：下載到的是 .xlsx 檔案
+Google Drive 有時會自動將 CSV 轉為 xlsx 格式。請手動轉換成CSV檔，再將其放置於專案根目錄。
 ```
 SMART_HEALTH/
 ├── data/
