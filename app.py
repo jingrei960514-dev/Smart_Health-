@@ -23,7 +23,11 @@ from fitness_pipeline.recommenders.food_recommender import (
     recommend_foods,
     build_food_display,
 )
-from fitness_pipeline.recommenders.goal_engine import estimate_goal_days
+from fitness_pipeline.recommenders.goal_engine import (
+    estimate_goal_days,
+    what_if_analysis,
+    generate_action_suggestions,
+)
 from fitness_pipeline.recommenders.llm_meal_plan import generate_llm_meal_plan
 from fitness_pipeline.recommenders.program_recommender import recommend_programs
 from fitness_pipeline.recommenders.program_recommender import load_program_candidates
@@ -109,8 +113,10 @@ if st.sidebar.button("產生個人化分析報告", type="primary"):
 
         food_rec     = recommend_foods(food_df, mode=food_mode, topn=5)
         food_display = build_food_display(food_rec)          # 已幫你 rename 欄位
-        goal_est     = estimate_goal_days(user, goal)        # 回傳 GoalEstimate dataclass
-        program_recs = recommend_programs(user, goal, predicted_level, profile_name, topn=3)
+        goal_est      = estimate_goal_days(user, goal)        # 回傳 GoalEstimate dataclass
+        whatif_scenarios, best_case = what_if_analysis(user, goal, goal_est.estimated_days)
+        actions       = generate_action_suggestions(user, predicted_level)
+        program_recs  = recommend_programs(user, goal, predicted_level, profile_name, topn=3)
         llm_meal_plan = generate_llm_meal_plan(goal_est, food_rec)
 
     # ── 結果呈現 ──────────────────────────────────────────────────────────────
@@ -130,14 +136,38 @@ if st.sidebar.button("產生個人化分析報告", type="primary"):
     st.success(f"建議每日目標攝取熱量：約 **{goal_est.target_intake:.0f}** 大卡")
     st.caption(goal_est.note)
 
-    # 三、營養推薦
-    st.header("三、營養輔助推薦清單")
+    # 三、邊際效益分析（What-If）
+    st.header("三、邊際效益分析")
+    st.markdown(
+        f"目前方案預估達標時間：**{goal_est.estimated_days:.0f} 天**\n\n"
+        "以下模擬若調整單一生活習慣，達標時間的可能變化："
+    )
+    cols = st.columns(len(whatif_scenarios))
+    for col, s in zip(cols, whatif_scenarios):
+        label = s.name  # e.g. "情境 A：每日步數 +2000"
+        delta_str = f"-{s.improve_days:.0f} 天" if s.improve_days > 0 else "無改善"
+        col.metric(
+            label=label,
+            value=f"{s.new_days:.0f} 天",
+            delta=delta_str,
+            delta_color="inverse",   # 天數減少 → 綠色（好事）
+        )
+    best_short = best_case.split("：", 1)[-1] if "：" in best_case else best_case
+    st.success(f"🏆 系統建議：**「{best_short}」** 的邊際效益最大，可優先嘗試。")
+
+    # 四、行動建議
+    st.header("四、行動建議")
+    for i, action in enumerate(actions, 1):
+        st.write(f"{i}. {action}")
+
+    # 五、營養推薦
+    st.header("五、營養輔助推薦清單")
     st.dataframe(food_display.round(3), width='stretch', hide_index=True)
     st.caption("以上表格依據 Cosine Similarity 計算得出，相似度越高代表營養配比越接近您的目標。")
 
-    # 四、課表推薦
+    # 六、課表推薦
     # ⚠️ program_recs 現在是 ProgramRec dataclass list，用 . 取屬性，不是 .get()
-    st.header("四、Top 3 個人化課表推薦")
+    st.header("六、Top 3 個人化課表推薦")
     if not program_recs:
         st.warning("目前資料庫中沒有適合的課表。")
     else:
@@ -155,6 +185,6 @@ if st.sidebar.button("產生個人化分析報告", type="primary"):
                 for limit in rec.limit_lines:
                     st.write(f"- {limit}")
 
-    # 五、LLM 菜單
-    st.header("五、LLM 營養師專屬菜單")
+    # 七、LLM 菜單
+    st.header("七、LLM 營養師專屬菜單")
     st.markdown(llm_meal_plan)
