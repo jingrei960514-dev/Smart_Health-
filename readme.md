@@ -27,9 +27,14 @@ SMART_HEALTH/
 │       └── test_fixes.py              # 單元測試
 ├── app.py                             # Streamlit 網頁介面
 ├── .env                               # API Key 設定（不在 repo 內）
+├── 機器學習與實驗說明.md                # 機器學習調整過程與模型效能評估
+├── 主程式pipeline說明.md               # 使用者流程與模型間互動關係(以尚未模組化程式碼版本為例)
+├── dataset應用說明.md                  # 資料集基本資訊與清理
+──  fitness_personalized_pipeline_v2.py # 尚未模組化之程式碼
 ├── .gitignore
 ├── requirements.txt
 └── README.md
+
 ```
 
 ---
